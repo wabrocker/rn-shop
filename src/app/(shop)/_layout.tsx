@@ -1,22 +1,28 @@
-import { Tabs } from "expo-router";
+import { Redirect, Tabs } from "expo-router";
 import { SafeAreaView } from "react-native-safe-area-context";
-import { StyleSheet } from "react-native";
-import { FontAwesome } from '@expo/vector-icons';
+import { ActivityIndicator, StyleSheet } from "react-native";
+import { FontAwesome } from "@expo/vector-icons";
+import { useAuth } from "../../providers/auth-provider";
 
 function TabBarIcon(props: {
-  name: React.ComponentProps<typeof FontAwesome>['name'];
+  name: React.ComponentProps<typeof FontAwesome>["name"];
   color: string;
 }) {
-  return <FontAwesome size={24} {...props} style={{ color: '#1BC464'}} />;
+  return <FontAwesome size={24} {...props} style={{ color: "#1BC464" }} />;
 }
 
 const TabsLayout = () => {
+  const { session, mounting } = useAuth();
+
+  if (mounting) return <ActivityIndicator />;
+  if (!session) return <Redirect href="/auth" />;
+
   return (
-    <SafeAreaView edges={['top']} style={styles.safeArea}>
+    <SafeAreaView edges={["top"]} style={styles.safeArea}>
       <Tabs
         screenOptions={{
-          tabBarActiveTintColor: '#1BC464',
-          tabBarInactiveTintColor: 'gray',
+          tabBarActiveTintColor: "#1BC464",
+          tabBarInactiveTintColor: "gray",
           tabBarLabelStyle: { fontSize: 16 },
           tabBarStyle: {
             borderTopLeftRadius: 20,
@@ -27,20 +33,20 @@ const TabsLayout = () => {
         }}
       >
         <Tabs.Screen
-          name='index'
+          name="index"
           options={{
-            title: 'shop',
+            title: "shop",
             tabBarIcon(props) {
-              return <TabBarIcon {...props} name='shopping-cart' />;
+              return <TabBarIcon {...props} name="shopping-cart" />;
             },
           }}
         />
         <Tabs.Screen
-          name='orders'
+          name="orders"
           options={{
-            title: 'orders',
+            title: "orders",
             tabBarIcon(props) {
-              return <TabBarIcon {...props} name='book' />;
+              return <TabBarIcon {...props} name="book" />;
             },
           }}
         />
