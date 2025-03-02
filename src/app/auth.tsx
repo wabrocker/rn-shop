@@ -1,3 +1,4 @@
+<<<<<<< HEAD
 import {
   View,
   Text,
@@ -10,6 +11,17 @@ import { useForm, Controller } from "react-hook-form";
 import * as zod from "zod";
 import { zodResolver } from "@hookform/resolvers/zod";
 import React from "react";
+=======
+import { View, Text, StyleSheet, ImageBackground, TextInput, TouchableOpacity } from 'react-native';
+import { useForm, Controller } from 'react-hook-form';
+import * as zod from 'zod';
+import { zodResolver } from '@hookform/resolvers/zod';
+import { Toast } from 'react-native-toast-notifications';
+
+import { supabase } from '../lib/supabase';
+import { useAuth } from '../providers/auth-provider';
+import { Redirect } from 'expo-router';
+>>>>>>> 960928abd84cdb738a946b7c9e5329d41ebf356b
 
 const authSchema = zod.object({
   email: zod.string().email({ message: "Invalid email address" }),
@@ -19,6 +31,7 @@ const authSchema = zod.object({
 });
 
 export default function Auth() {
+<<<<<<< HEAD
   const { control, handleSubmit, formState } = useForm({
     resolver: zodResolver(authSchema),
     defaultValues: {
@@ -33,6 +46,47 @@ export default function Auth() {
 
   const signUp = (data: zod.infer<typeof authSchema>) => {
     console.log(data);
+=======
+  const { session } = useAuth();
+
+  if (session) return <Redirect href='/' />;
+
+  const { control, handleSubmit, formState } = useForm({
+    resolver: zodResolver(authSchema),
+    defaultValues: {
+      email: '',
+      password: '',
+    }
+  });
+
+  const signIn = async (data: zod.infer<typeof authSchema>) => {
+    const { error } = await supabase.auth.signInWithPassword(data);
+
+    if (error) {
+      alert(error.message);
+    } else {
+      Toast.show('Signed in successfully', {
+        type: 'success',
+        placement: 'top',
+        duration: 1750,
+      });
+    }
+  };
+
+  const signUp = async (data: zod.infer<typeof authSchema>) => {
+
+    const { error } = await supabase.auth.signUp(data);
+
+    if (error) {
+      alert(error.message);
+    } else {
+      Toast.show('Signed up successfully', {
+        type: 'success',
+        placement: 'top',
+        duration: 1750,
+      });
+    }
+>>>>>>> 960928abd84cdb738a946b7c9e5329d41ebf356b
   };
 
   return (
